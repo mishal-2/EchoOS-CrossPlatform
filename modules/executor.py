@@ -370,3 +370,149 @@ class Executor:
                 return False
         
         return False
+    
+    def _execute_system_info(self, intent: str, params: Dict) -> bool:
+        """Execute system information commands"""
+        if intent == 'system_info':
+            info = f"System: {platform.system()} {platform.release()}"
+            if self.tts:
+                self.tts.speak(info)
+            logger.info(info)
+            return True
+        
+        elif intent == 'battery':
+            try:
+                battery = psutil.sensors_battery()
+                if battery:
+                    percent = battery.percent
+                    plugged = "plugged in" if battery.power_plugged else "on battery"
+                    info = f"Battery at {percent} percent, {plugged}"
+                    if self.tts:
+                        self.tts.speak(info)
+                    logger.info(info)
+                    return True
+                else:
+                    if self.tts:
+                        self.tts.speak("No battery detected")
+                    return False
+            except Exception as e:
+                logger.error(f"Error getting battery info: {e}")
+                return False
+        
+        elif intent == 'disk_space':
+            try:
+                disk = psutil.disk_usage('/')
+                total_gb = disk.total / (1024**3)
+                used_gb = disk.used / (1024**3)
+                free_gb = disk.free / (1024**3)
+                percent = disk.percent
+                
+                info = f"Disk: {used_gb:.1f} GB used of {total_gb:.1f} GB, {free_gb:.1f} GB free, {percent}% used"
+                if self.tts:
+                    self.tts.speak(f"Disk is {percent} percent full")
+                logger.info(info)
+                return True
+            except Exception as e:
+                logger.error(f"Error getting disk space: {e}")
+                return False
+        
+        elif intent == 'memory':
+            try:
+                mem = psutil.virtual_memory()
+                total_gb = mem.total / (1024**3)
+                used_gb = mem.used / (1024**3)
+                percent = mem.percent
+                
+                info = f"Memory: {used_gb:.1f} GB used of {total_gb:.1f} GB, {percent}% used"
+                if self.tts:
+                    self.tts.speak(f"Memory is {percent} percent used")
+                logger.info(info)
+                return True
+            except Exception as e:
+                logger.error(f"Error getting memory info: {e}")
+                return False
+        
+        elif intent == 'cpu':
+            try:
+                cpu_percent = psutil.cpu_percent(interval=1)
+                info = f"CPU usage: {cpu_percent}%"
+                if self.tts:
+                    self.tts.speak(f"CPU usage is {cpu_percent} percent")
+                logger.info(info)
+                return True
+            except Exception as e:
+                logger.error(f"Error getting CPU info: {e}")
+                return False
+        
+        elif intent == 'network':
+            try:
+                # Get network interfaces
+                addrs = psutil.net_if_addrs()
+                connected = len(addrs) > 0
+                
+                if connected:
+                    if self.tts:
+                        self.tts.speak("Network is connected")
+                    logger.info(f"Network interfaces: {list(addrs.keys())}")
+                    return True
+                else:
+                    if self.tts:
+                        self.tts.speak("No network connection")
+                    return False
+            except Exception as e:
+                logger.error(f"Error getting network info: {e}")
+                return False
+        
+        return False
+    
+    def _execute_volume(self, intent: str, params: Dict) -> bool:
+        """Execute volume control commands"""
+        amount = params.get('amount', 10)
+        
+        try:
+            if self.platform == 'Windows':
+                if intent == 'volume_up':
+                    # Use nircmd or similar tool
+                    os.system(f'nircmd changesysvolume {amount * 655}')
+                elif intent == 'volume_down':
+                    os.system(f'nircmd changesysvolume -{amount * 655}')
+                elif intent == 'mute':
+                    os.system('nircmd mutesysvolume 1')
+            
+            elif self.platform == 'Darwin':
+                current = subprocess.check_output(['osascript', '-e', 'output volume of (get volume settings)']).decode().strip()
+                current_vol = int(current)
+                
+                if intent == 'volume_up':
+                    new_vol = min(100, current_vol + amount)
+                    os.system(f'osascript -e "set volume output volume {new_vol}"')
+                elif intent == 'volume_down':
+                    new_vol = max(0, current_vol - amount)
+                    os.system(f'osascript -e "set volume output volume {new_vol}"')
+                elif intent == 'mute':
+                    os.system('osascript -e "set volume output muted true"')
+            
+            if self.tts:
+                self.tts.speak(f"Volume {intent.replace('_', ' ')}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Error controlling volume: {e}")
+            if self.tts:
+                self.tts.speak("Volume control not available")
+            return False
+    
+    def _execute_control(self, intent: str, params: Dict) -> bool:
+        """Execute control commands"""
+        if intent == 'stop_listening':
+            if self.tts:
+                self.tts.speak("Stopping")
+            # This will be handled by the main window
+            return True
+        
+        elif intent == 'wake_up':
+            if self.tts:
+                self.tts.speak("I'm listening")
+            return True
+        
+        return False
