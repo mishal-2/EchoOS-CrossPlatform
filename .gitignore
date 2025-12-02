@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# EchoOS Specific
+config/users.pkl
+config/sessions.pkl
+config/apps.json
+models/vosk-model-*/
+models/user_voices/
+*.log
+echoos.log
+
+# Vosk Models (large files)
+vosk-model-small-en-us-*/
+vosk-model-en-us-*/
+
+# User Data
+user_data/
+voice_samples/
+session_data/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+temp/
+tmp/
+
+# OS Specific
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Audio Files (except samples)
+*.wav
+*.mp3
+!samples/*.wav
+
+# Secrets and Keys
+.env
+secrets.json
+*.key
+*.pem
