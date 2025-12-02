@@ -13,6 +13,7 @@ import webbrowser
 import psutil
 from typing import Dict, Optional
 from pathlib import Path
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +49,31 @@ class Executor:
         except Exception as e:
             logger.error(f"Error loading app paths: {e}")
         return {}
+    
+    def _validate_filename(self, filename: str) -> bool:
+        """
+        Validate filename for security
+        
+        Args:
+            filename: Filename to validate
+            
+        Returns:
+            True if valid, False otherwise
+        """
+        if not filename:
+            return False
+        
+        # Check for directory traversal
+        if '..' in filename or filename.startswith('/'):
+            logger.warning(f"Invalid filename detected: {filename}")
+            return False
+        
+        # Check for suspicious characters
+        if any(char in filename for char in ['|', '&', ';', '`', '$', '(', ')']):
+            logger.warning(f"Suspicious characters in filename: {filename}")
+            return False
+        
+        return True
     
     def execute(self, command: Dict) -> bool:
         """
@@ -91,60 +117,93 @@ class Executor:
                 return False
                 
         except Exception as e:
-            logger.error(f"Error executing command: {e}")
+            logger.error(f"Error executing command: {e}", exc_info=True)
             if self.tts:
                 self.tts.speak("Command execution failed")
             return False
     
     def _execute_system(self, intent: str, params: Dict) -> bool:
-        """Execute system commands"""
+        """Execute system commands with proper security"""
         if intent == 'shutdown':
             if self.tts:
                 self.tts.speak("Shutting down system", blocking=True)
             
-            if self.platform == 'Windows':
-                os.system('shutdown /s /t 1')
-            elif self.platform == 'Darwin':  # macOS
-                os.system('sudo shutdown -h now')
-            else:  # Linux
-                os.system('shutdown -h now')
-            return True
+            try:
+                if self.platform == 'Windows':
+                    subprocess.run(['shutdown', '/s', '/t', '1'], check=False)
+                elif self.platform == 'Darwin':  # macOS
+                    # Note: Requires sudo privileges
+                    subprocess.run(['osascript', '-e', 'tell app "System Events" to shut down'], check=False)
+                else:  # Linux
+                    subprocess.run(['systemctl', 'poweroff'], check=False)
+                return True
+            except Exception as e:
+                logger.error(f"Shutdown failed: {e}")
+                if self.tts:
+                    self.tts.speak("Shutdown failed. May require administrator privileges")
+                return False
         
         elif intent == 'restart':
             if self.tts:
                 self.tts.speak("Restarting system", blocking=True)
             
-            if self.platform == 'Windows':
-                os.system('shutdown /r /t 1')
-            elif self.platform == 'Darwin':
-                os.system('sudo shutdown -r now')
-            else:
-                os.system('shutdown -r now')
-            return True
+            try:
+                if self.platform == 'Windows':
+                    subprocess.run(['shutdown', '/r', '/t', '1'], check=False)
+                elif self.platform == 'Darwin':
+                    subprocess.run(['osascript', '-e', 'tell app "System Events" to restart'], check=False)
+                else:
+                    subprocess.run(['systemctl', 'reboot'], check=False)
+                return True
+            except Exception as e:
+                logger.error(f"Restart failed: {e}")
+                if self.tts:
+                    self.tts.speak("Restart failed")
+                return False
         
         elif intent == 'sleep':
             if self.tts:
                 self.tts.speak("Putting system to sleep")
             
-            if self.platform == 'Windows':
-                os.system('rundll32.exe powrprof.dll,SetSuspendState 0,1,0')
-            elif self.platform == 'Darwin':
-                os.system('pmset sleepnow')
-            else:
-                os.system('systemctl suspend')
-            return True
+            try:
+                if self.platform == 'Windows':
+                    subprocess.run(['rundll32.exe', 'powrprof.dll,SetSuspendState', '0', '1', '0'], check=False)
+                elif self.platform == 'Darwin':
+                    subprocess.run(['pmset', 'sleepnow'], check=False)
+                else:
+                    subprocess.run(['systemctl', 'suspend'], check=False)
+                return True
+            except Exception as e:
+                logger.error(f"Sleep failed: {e}")
+                if self.tts:
+                    self.tts.speak("Sleep failed")
+                return False
         
         elif intent == 'lock':
             if self.tts:
                 self.tts.speak("Locking screen")
             
-            if self.platform == 'Windows':
-                os.system('rundll32.exe user32.dll,LockWorkStation')
-            elif self.platform == 'Darwin':
-                os.system('/System/Library/CoreServices/Menu\\ Extras/User.menu/Contents/Resources/CGSession -suspend')
-            else:
-                os.system('gnome-screensaver-command -l')
-            return True
+            try:
+                if self.platform == 'Windows':
+                    subprocess.run(['rundll32.exe', 'user32.dll,LockWorkStation'], check=False)
+                elif self.platform == 'Darwin':
+                    subprocess.run(['/System/Library/CoreServices/Menu Extras/User.menu/Contents/Resources/CGSession', '-suspend'], check=False)
+                else:
+                    # Try multiple lock commands for different desktop environments
+                    for cmd in [['gnome-screensaver-command', '-l'], 
+                               ['xdg-screensaver', 'lock'],
+                               ['loginctl', 'lock-session']]:
+                        try:
+                            subprocess.run(cmd, check=False, timeout=2)
+                            break
+                        except:
+                            continue
+                return True
+            except Exception as e:
+                logger.error(f"Lock failed: {e}")
+                if self.tts:
+                    self.tts.speak("Lock failed")
+                return False
         
         return False
     
@@ -163,7 +222,7 @@ class Executor:
                 app_path = self.app_paths[app_name]
                 try:
                     if self.platform == 'Windows':
-                        os.startfile(app_path)
+                        subprocess.Popen([app_path], shell=False)
                     elif self.platform == 'Darwin':
                         subprocess.Popen(['open', '-a', app_path])
                     else:
@@ -177,23 +236,23 @@ class Executor:
             
             # Try common applications
             common_apps = {
-                'chrome': ['chrome', 'google chrome', 'Google Chrome'],
-                'firefox': ['firefox', 'Firefox'],
-                'edge': ['msedge', 'Microsoft Edge'],
-                'notepad': ['notepad', 'Notepad'],
-                'calculator': ['calc', 'Calculator'],
-                'terminal': ['cmd' if self.platform == 'Windows' else 'Terminal'],
+                'chrome': {'win': 'chrome', 'mac': 'Google Chrome', 'linux': 'google-chrome'},
+                'firefox': {'win': 'firefox', 'mac': 'Firefox', 'linux': 'firefox'},
+                'edge': {'win': 'msedge', 'mac': 'Microsoft Edge', 'linux': 'microsoft-edge'},
+                'notepad': {'win': 'notepad', 'mac': 'TextEdit', 'linux': 'gedit'},
+                'calculator': {'win': 'calc', 'mac': 'Calculator', 'linux': 'gnome-calculator'},
+                'terminal': {'win': 'cmd', 'mac': 'Terminal', 'linux': 'gnome-terminal'},
             }
             
-            for key, names in common_apps.items():
+            for key, apps in common_apps.items():
                 if app_name in key or key in app_name:
                     try:
                         if self.platform == 'Windows':
-                            subprocess.Popen(names[0])
+                            subprocess.Popen([apps['win']], shell=False)
                         elif self.platform == 'Darwin':
-                            subprocess.Popen(['open', '-a', names[-1]])
+                            subprocess.Popen(['open', '-a', apps['mac']])
                         else:
-                            subprocess.Popen([names[0]])
+                            subprocess.Popen([apps['linux']])
                         
                         if self.tts:
                             self.tts.speak(f"Opening {app_name}")
@@ -216,7 +275,7 @@ class Executor:
             for proc in psutil.process_iter(['name']):
                 try:
                     if app_name in proc.info['name'].lower():
-                        proc.kill()
+                        proc.terminate()
                         killed = True
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
@@ -233,8 +292,14 @@ class Executor:
         return False
     
     def _execute_file(self, intent: str, params: Dict) -> bool:
-        """Execute file operations"""
+        """Execute file operations with validation"""
         filename = params.get('filename', '')
+        
+        # Validate filename
+        if not self._validate_filename(filename):
+            if self.tts:
+                self.tts.speak("Invalid filename")
+            return False
         
         if intent == 'open_file':
             if not filename:
@@ -243,12 +308,18 @@ class Executor:
                 return False
             
             try:
+                file_path = Path(filename)
+                if not file_path.exists():
+                    if self.tts:
+                        self.tts.speak("File not found")
+                    return False
+                
                 if self.platform == 'Windows':
-                    os.startfile(filename)
+                    subprocess.Popen(['start', '', str(file_path)], shell=True)
                 elif self.platform == 'Darwin':
-                    subprocess.Popen(['open', filename])
+                    subprocess.Popen(['open', str(file_path)])
                 else:
-                    subprocess.Popen(['xdg-open', filename])
+                    subprocess.Popen(['xdg-open', str(file_path)])
                 
                 if self.tts:
                     self.tts.speak(f"Opening {filename}")
@@ -266,7 +337,13 @@ class Executor:
                 return False
             
             try:
-                Path(filename).touch()
+                file_path = Path(filename)
+                if file_path.exists():
+                    if self.tts:
+                        self.tts.speak("File already exists")
+                    return False
+                
+                file_path.touch()
                 if self.tts:
                     self.tts.speak(f"Created {filename}")
                 return True
@@ -283,7 +360,13 @@ class Executor:
                 return False
             
             try:
-                Path(filename).unlink()
+                file_path = Path(filename)
+                if not file_path.exists():
+                    if self.tts:
+                        self.tts.speak("File not found")
+                    return False
+                
+                file_path.unlink()
                 if self.tts:
                     self.tts.speak(f"Deleted {filename}")
                 return True
@@ -471,26 +554,32 @@ class Executor:
         
         try:
             if self.platform == 'Windows':
+                # Windows volume control using nircmd (if available)
                 if intent == 'volume_up':
-                    # Use nircmd or similar tool
-                    os.system(f'nircmd changesysvolume {amount * 655}')
+                    subprocess.run(['nircmd', 'changesysvolume', str(amount * 655)], check=False)
                 elif intent == 'volume_down':
-                    os.system(f'nircmd changesysvolume -{amount * 655}')
+                    subprocess.run(['nircmd', 'changesysvolume', str(-amount * 655)], check=False)
                 elif intent == 'mute':
-                    os.system('nircmd mutesysvolume 1')
+                    subprocess.run(['nircmd', 'mutesysvolume', '1'], check=False)
             
             elif self.platform == 'Darwin':
-                current = subprocess.check_output(['osascript', '-e', 'output volume of (get volume settings)']).decode().strip()
-                current_vol = int(current)
-                
-                if intent == 'volume_up':
-                    new_vol = min(100, current_vol + amount)
-                    os.system(f'osascript -e "set volume output volume {new_vol}"')
-                elif intent == 'volume_down':
-                    new_vol = max(0, current_vol - amount)
-                    os.system(f'osascript -e "set volume output volume {new_vol}"')
-                elif intent == 'mute':
-                    os.system('osascript -e "set volume output muted true"')
+                # macOS volume control
+                try:
+                    result = subprocess.run(['osascript', '-e', 'output volume of (get volume settings)'], 
+                                          capture_output=True, text=True, check=True)
+                    current_vol = int(result.stdout.strip())
+                    
+                    if intent == 'volume_up':
+                        new_vol = min(100, current_vol + amount)
+                        subprocess.run(['osascript', '-e', f'set volume output volume {new_vol}'], check=False)
+                    elif intent == 'volume_down':
+                        new_vol = max(0, current_vol - amount)
+                        subprocess.run(['osascript', '-e', f'set volume output volume {new_vol}'], check=False)
+                    elif intent == 'mute':
+                        subprocess.run(['osascript', '-e', 'set volume output muted true'], check=False)
+                except subprocess.CalledProcessError:
+                    logger.error("Failed to control volume on macOS")
+                    return False
             
             if self.tts:
                 self.tts.speak(f"Volume {intent.replace('_', ' ')}")
