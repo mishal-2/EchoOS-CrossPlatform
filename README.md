@@ -4,14 +4,33 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](https://github.com/Mishal-Projects/EchoOS-CrossPlatform)
 [![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)](https://github.com/Mishal-Projects/EchoOS-CrossPlatform)
+[![Enhanced](https://img.shields.io/badge/UI-Dark%20Mode%20%2B%20Waveform-purple)](https://github.com/Mishal-Projects/EchoOS-CrossPlatform)
 
 **EchoOS** is a secure, privacy-first, offline voice-controlled operating system interface with integrated voice biometric authentication. Control your computer entirely through voice commands without internet dependency.
 
-> 🎉 **Project Status**: **COMPLETE & PRODUCTION READY** - All features implemented, tested, and documented!
+> 🎉 **Project Status**: **PRODUCTION READY** with **Enhanced UI** featuring Dark Mode & Animated Waveform!
 
-## ✨ Key Features
+## ✨ New: Enhanced Version Available!
 
-- 🔒 **Voice Biometric Authentication** - Secure user identification (optional)
+### 🌙 Dark Mode + 📊 Animated Waveform
+
+**EchoOS Enhanced** now includes:
+- **Dark Mode Theme** - Eye-friendly design for extended use
+- **Animated Waveform** - Real-time audio visualization
+- **Modern UI** - Professional design with smooth animations
+- **Theme Toggle** - Switch between dark and light modes instantly
+
+**Quick Start Enhanced:**
+```bash
+python main_enhanced.py  # New enhanced version
+python main.py           # Original version
+```
+
+See [ENHANCED_FEATURES.md](ENHANCED_FEATURES.md) for details!
+
+## 🎯 Key Features
+
+- 🔒 **Voice Biometric Authentication** - Secure user identification using Resemblyzer
 - 🎤 **Offline Speech Recognition** - Powered by Vosk (no internet required)
 - 🖥️ **Cross-Platform** - Works on Windows, macOS, and Linux
 - 🗣️ **Text-to-Speech Feedback** - Real-time voice responses
@@ -19,7 +38,8 @@
 - 🔐 **Session Management** - Secure multi-user access with encryption
 - ♿ **Accessibility Features** - Screen reading and navigation
 - 🎨 **Modern GUI** - Built with PySide6
-- 🛡️ **Security First** - All processing happens locally, no cloud dependency
+- 🌙 **Dark Mode** - Eye-friendly theme (Enhanced version)
+- 📊 **Waveform Visualization** - Real-time audio feedback (Enhanced version)
 
 ## 📊 Performance Metrics
 
@@ -28,47 +48,72 @@
 - **Command Success Rate**: 93%
 - **Response Latency**: 150ms average
 - **Memory Footprint**: 315MB
+- **Animation**: 20 FPS smooth waveform
 
-## 🚀 Quick Start (Automated Setup)
+## 🚀 Quick Start
 
-### One-Command Installation
+### Prerequisites
 
+- Python 3.8 or higher
+- Microphone
+- 4GB RAM minimum (8GB recommended)
+- 500MB free disk space
+
+### Installation (3 Simple Steps)
+
+1. **Clone the repository**
 ```bash
-# Clone repository
 git clone https://github.com/Mishal-Projects/EchoOS-CrossPlatform.git
 cd EchoOS-CrossPlatform
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Automated setup (downloads models, creates config)
-python scripts/download_models.py
-
-# Launch EchoOS
-python run.py
 ```
 
-That's it! The setup script will:
-- ✅ Download Vosk speech recognition model (~40MB)
-- ✅ Create configuration files
-- ✅ Set up user database
-- ✅ Verify all dependencies
+2. **Create virtual environment and install**
+```bash
+python -m venv venv
 
-### First Run
+# Windows
+venv\Scripts\activate
 
-1. **Launch**: `python run.py`
-2. **Register**: Create your user account (voice or password)
-3. **Authenticate**: Login with voice or password
-4. **Start Using**: Try "open chrome" or "what's the battery status?"
+# macOS/Linux
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+3. **Setup and run**
+```bash
+# Using the smart launcher (recommended)
+python run.py
+
+# Or run enhanced version directly
+python main_enhanced.py
+
+# Or standard version
+python main.py
+```
+
+## 🎨 Choose Your Version
+
+### Enhanced Version (Recommended)
+```bash
+python main_enhanced.py
+```
+**Features:**
+- ✅ Dark mode theme
+- ✅ Animated waveform
+- ✅ Modern design
+- ✅ Theme toggle
+- ✅ Enhanced visual feedback
+
+### Standard Version
+```bash
+python main.py
+```
+**Features:**
+- ✅ Light theme
+- ✅ Basic UI
+- ✅ Faster startup
+- ✅ Lower resource usage
 
 ## 🎯 Supported Commands
 
@@ -101,163 +146,126 @@ That's it! The setup script will:
 - `read screen` / `navigate` / `click`
 - `scroll up` / `scroll down` / `zoom in` / `zoom out`
 
-## 📋 Requirements
+## 📖 Documentation
 
-### System Requirements
-- **OS**: Windows 10/11, macOS 10.15+, or Linux (Ubuntu 20.04+)
-- **Python**: 3.8 or higher
-- **RAM**: 4GB minimum (8GB recommended)
-- **Disk Space**: 500MB free space
-- **Microphone**: Required for voice commands
+- **[Enhanced Features Guide](ENHANCED_FEATURES.md)** - Dark mode & waveform details
+- **[Enhanced Quick Start](ENHANCED_QUICKSTART.md)** - Get started with enhanced version
+- **[User Manual](docs/USER_MANUAL.md)** - Complete guide for end users
+- **[API Documentation](docs/API.md)** - Detailed API reference
+- **[Development Guide](docs/DEVELOPMENT.md)** - For contributors
+- **[Installation Guide](INSTALLATION.md)** - Detailed setup instructions
+- **[Quick Start Guide](QUICKSTART.md)** - 5-minute getting started
+- **[Getting Started](GETTING_STARTED.md)** - Beginner-friendly guide
 
-### Python Dependencies
-All dependencies are automatically installed via `requirements.txt`:
-- PySide6 (GUI)
-- Vosk (Speech Recognition)
-- pyttsx3 (Text-to-Speech)
-- sounddevice (Audio I/O)
-- psutil (System Information)
-- cryptography (Session Encryption)
-- And more...
+## 🎨 Enhanced UI Preview
 
-## 🔧 Troubleshooting
+### Dark Mode with Waveform
+```
+┌─────────────────────────────────────────┐
+│  🎙️ EchoOS          [☀️ Light Mode]    │
+│  Voice-Controlled Operating System      │
+├─────────────────────────────────────────┤
+│           🎤 Listening...               │
+├─────────────────────────────────────────┤
+│  Audio Visualization                    │
+│  ╔═══════════════════════════════════╗  │
+│  ║  ～～～～～～～～～～～～～～～～～  ║  │
+│  ║ ～～～～～～～～～～～～～～～～～～ ║  │
+│  ╚═══════════════════════════════════╝  │
+├─────────────────────────────────────────┤
+│  🔐 Authentication                      │
+│  ✅ Logged in as: john_doe              │
+└─────────────────────────────────────────┘
+```
+
+## 🏗️ Project Structure
+
+```
+EchoOS-CrossPlatform/
+├── main.py                 # Standard version entry point
+├── main_enhanced.py        # Enhanced version entry point
+├── run.py                  # Smart launcher with checks
+├── modules/
+│   ├── ui.py              # Standard UI
+│   ├── ui_enhanced.py     # Enhanced UI (Dark mode + Waveform)
+│   ├── auth.py            # Voice authentication
+│   ├── stt.py             # Speech-to-text
+│   ├── tts.py             # Text-to-speech
+│   ├── parser.py          # Command parsing
+│   ├── executor.py        # Command execution
+│   └── ...
+├── docs/                  # Documentation
+├── tests/                 # Unit tests
+└── scripts/               # Utility scripts
+```
+
+## 🔧 Development
+
+### Using Makefile
+
+```bash
+make help           # Show all commands
+make install        # Install dependencies
+make setup          # Run first-time setup
+make test           # Run tests with coverage
+make run            # Launch standard version
+make run-enhanced   # Launch enhanced version
+make clean          # Clean temporary files
+```
+
+## 🛡️ Security Features
+
+- **Voice Biometric Authentication** - Unique voice signatures
+- **Session Encryption** - Fernet encryption for session data
+- **Session Timeout** - 30-minute automatic logout
+- **Offline Processing** - No data sent to cloud
+- **Local Storage** - All data stored locally
+
+## 🐛 Troubleshooting
+
+### Quick Diagnostics
+
+```bash
+# Test microphone
+python scripts/test_microphone.py
+
+# Discover applications
+python scripts/discover_apps.py
+
+# Setup configuration
+python scripts/setup_config.py
+```
 
 ### Common Issues
 
-**"No module named 'PySide6'"**
-```bash
-pip install -r requirements.txt
-```
+- **Waveform Not Animating**: Check microphone permissions and click "Start Listening"
+- **Dark Mode Too Dark**: Click "☀️ Light Mode" button to switch themes
+- **Microphone Not Detected**: Check permissions and default device
+- **Voice Not Recognized**: Reduce background noise, speak clearly
+- **Authentication Fails**: Re-register in quiet environment
 
-**"Vosk model not found"**
-```bash
-python scripts/download_models.py
-```
-
-**"No input devices found"**
-- Check microphone is connected
-- Grant microphone permissions to Python/Terminal
-- **macOS**: System Preferences → Security & Privacy → Microphone
-- **Windows**: Settings → Privacy → Microphone
-
-**"Voice authentication not working"**
-- Voice auth is optional and requires Resemblyzer
-- Falls back to password authentication automatically
-- To enable: `pip install resemblyzer`
-
-### Platform-Specific Setup
-
-**Linux (Ubuntu/Debian):**
-```bash
-sudo apt install portaudio19-dev python3-dev
-```
-
-**macOS:**
-```bash
-brew install portaudio
-```
-
-**Windows:**
-- No additional setup needed
-
-For detailed troubleshooting, see [SETUP_GUIDE.md](SETUP_GUIDE.md)
-
-## 📚 Documentation
-
-- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - Comprehensive installation guide
-- **[FIXES_APPLIED.md](FIXES_APPLIED.md)** - All fixes and improvements
-- **[QUICKSTART.md](QUICKSTART.md)** - Quick start guide
-- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Beginner's guide
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
-- **[docs/USER_MANUAL.md](docs/USER_MANUAL.md)** - Complete user manual
-- **[docs/API.md](docs/API.md)** - API documentation
-
-## 🏗️ Architecture
-
-```
-EchoOS/
-├── modules/              # Core modules
-│   ├── auth.py          # Voice/password authentication
-│   ├── stt.py           # Speech-to-text (Vosk)
-│   ├── tts.py           # Text-to-speech
-│   ├── parser.py        # Command parsing
-│   ├── executor.py      # Command execution
-│   ├── ui.py            # GUI interface
-│   └── ...
-├── scripts/             # Utility scripts
-│   ├── download_models.py  # Automated setup
-│   └── ...
-├── tests/               # Test suite
-├── config/              # Configuration files
-├── models/              # Speech recognition models
-└── docs/                # Documentation
-```
-
-## 🔐 Security Features
-
-- **Local Processing**: All data stays on your device
-- **Encrypted Sessions**: Fernet encryption for session data
-- **Input Validation**: Protection against command injection
-- **No Cloud Dependency**: Works completely offline
-- **Secure Authentication**: Voice biometrics or password-based
-
-## 🎓 Use Cases
-
-- **Accessibility**: Hands-free computer control
-- **Productivity**: Quick system operations
-- **Security**: Biometric authentication
-- **Automation**: Voice-controlled workflows
-- **Learning**: Study voice recognition and biometrics
+See [User Manual](docs/USER_MANUAL.md) for detailed troubleshooting.
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-### Development Setup
+## 🔮 Future Enhancements
 
-```bash
-# Install development dependencies
-pip install -r requirements-dev.txt
-
-# Run tests
-pytest tests/ -v
-
-# Format code
-black modules/ tests/ scripts/
-
-# Lint code
-flake8 modules/ tests/
-```
-
-## 📊 Project Statistics
-
-- **Total Files**: 40+
-- **Lines of Code**: 4,500+
-- **Test Coverage**: Comprehensive test suite
-- **Documentation**: 8 detailed guides
-- **Supported Commands**: 40+
-- **Supported Platforms**: 3 (Windows, macOS, Linux)
-
-## 🗺️ Roadmap
-
-### Version 2.1 (Planned)
 - [ ] Natural Language Understanding (NLU)
-- [ ] Multi-language support
-- [ ] Voice command macros
-- [ ] Improved error messages
-
-### Version 3.0 (Future)
+- [ ] Multi-language support (Spanish, French, German)
 - [ ] Continuous authentication
-- [ ] Mobile deployment
-- [ ] Plugin system
-- [ ] Cloud sync (optional)
-- [ ] Custom wake word support
+- [ ] Mobile deployment (iOS/Android)
+- [ ] Plugin system for extensions
+- [ ] Multiple color themes (Nord, Dracula, etc.)
+- [ ] Spectrum analyzer view
+- [ ] Custom waveform colors
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## 👥 Author
 
 **M A Mohammed Mishal**
 - GitHub: [@Mishal-Projects](https://github.com/Mishal-Projects)
@@ -267,20 +275,53 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Vosk** - Offline speech recognition
 - **Resemblyzer** - Voice biometric authentication
 - **PySide6** - Modern GUI framework
-- **pyttsx3** - Text-to-speech engine
+- **pyttsx3** - Text-to-speech synthesis
 
-## 📞 Support
+## 📊 Project Stats
 
-- **Issues**: [GitHub Issues](https://github.com/Mishal-Projects/EchoOS-CrossPlatform/issues)
-- **Documentation**: See `docs/` directory
-- **Setup Help**: See [SETUP_GUIDE.md](SETUP_GUIDE.md)
+- **Total Files**: 40+
+- **Lines of Code**: 5,000+
+- **Test Coverage**: Comprehensive
+- **Documentation**: 10+ detailed guides
+- **Supported Commands**: 40+
+- **Platforms**: 3 (Windows, macOS, Linux)
+- **UI Versions**: 2 (Standard + Enhanced)
 
-## ⭐ Star History
+## 🎉 Project Status
 
-If you find EchoOS useful, please consider giving it a star! ⭐
+✅ **Core Features**: Complete  
+✅ **Testing Suite**: Complete  
+✅ **Documentation**: Complete  
+✅ **CI/CD Pipeline**: Complete  
+✅ **Cross-Platform**: Complete  
+✅ **Enhanced UI**: Complete  
+✅ **Production Ready**: Yes  
 
 ---
 
-**Made with ❤️ for the open-source community**
+**Ready to control your computer with your voice?**
 
-*Control your computer with your voice - securely, privately, offline.*
+### Standard Version
+```bash
+git clone https://github.com/Mishal-Projects/EchoOS-CrossPlatform.git
+cd EchoOS-CrossPlatform
+python main.py
+```
+
+### Enhanced Version (Dark Mode + Waveform)
+```bash
+git clone https://github.com/Mishal-Projects/EchoOS-CrossPlatform.git
+cd EchoOS-CrossPlatform
+python main_enhanced.py
+```
+
+For detailed instructions:
+- **Enhanced Version**: See [ENHANCED_QUICKSTART.md](ENHANCED_QUICKSTART.md)
+- **Standard Version**: See [QUICKSTART.md](QUICKSTART.md)
+- **Full Setup**: See [INSTALLATION.md](INSTALLATION.md)
+
+---
+
+⭐ **Star this repo if you find it useful!**
+
+🌙 **Try the new Enhanced version with Dark Mode!**
