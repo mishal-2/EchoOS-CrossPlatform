@@ -115,7 +115,7 @@ class WaveformWidget(QWidget):
 class EchoMainWindowEnhanced(QMainWindow):
     """Enhanced main window with dark mode and waveform"""
     
-    def __init__(self, stt_manager, command_parser, executor, auth, tts):
+    def __init__(self, auth, stt_manager, tts, accessibility, command_parser, executor, parent=None):
         super().__init__()
         
         self.stt_manager = stt_manager

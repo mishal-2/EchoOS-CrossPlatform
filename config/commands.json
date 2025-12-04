@@ -1,0 +1,140 @@
+{
+  "system": {
+    "shutdown": [
+      "shutdown",
+      "shut down",
+      "power off"
+    ],
+    "restart": [
+      "restart",
+      "reboot"
+    ],
+    "sleep": [
+      "sleep",
+      "hibernate"
+    ],
+    "lock": [
+      "lock",
+      "lock screen",
+      "lock computer"
+    ]
+  },
+  "application": {
+    "open": [
+      "open",
+      "launch",
+      "start",
+      "run"
+    ],
+    "close": [
+      "close",
+      "exit",
+      "quit",
+      "terminate"
+    ],
+    "minimize": [
+      "minimize",
+      "minimise"
+    ],
+    "maximize": [
+      "maximize",
+      "maximise",
+      "full screen"
+    ]
+  },
+  "file": {
+    "open_file": [
+      "open file",
+      "show file"
+    ],
+    "create_file": [
+      "create file",
+      "new file",
+      "make file"
+    ],
+    "delete_file": [
+      "delete file",
+      "remove file"
+    ],
+    "list_files": [
+      "list files",
+      "show files"
+    ]
+  },
+  "web": {
+    "open_website": [
+      "open website",
+      "open site",
+      "go to",
+      "navigate to"
+    ],
+    "search_google": [
+      "search google",
+      "google search",
+      "search"
+    ],
+    "search_youtube": [
+      "search youtube",
+      "youtube search"
+    ]
+  },
+  "system_info": {
+    "system_info": [
+      "system info",
+      "system information"
+    ],
+    "battery": [
+      "battery",
+      "battery status"
+    ],
+    "disk_space": [
+      "disk space",
+      "storage"
+    ],
+    "memory": [
+      "memory",
+      "ram",
+      "memory usage"
+    ],
+    "cpu": [
+      "cpu",
+      "processor",
+      "cpu usage"
+    ],
+    "network": [
+      "network",
+      "network status",
+      "wifi"
+    ]
+  },
+  "volume": {
+    "volume_up": [
+      "volume up",
+      "increase volume",
+      "louder"
+    ],
+    "volume_down": [
+      "volume down",
+      "decrease volume",
+      "quieter"
+    ],
+    "mute": [
+      "mute",
+      "silence"
+    ]
+  },
+  "control": {
+    "stop_listening": [
+      "stop",
+      "sleep",
+      "go to sleep",
+      "stop listening"
+    ],
+    "wake_up": [
+      "wake up",
+      "start listening",
+      "resume",
+      "hello echo"
+    ]
+  }
+}

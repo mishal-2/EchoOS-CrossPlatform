@@ -2,7 +2,7 @@
 PySide6>=6.5.0
 
 # Speech Recognition and Audio
-vosk>=0.3.45
+vosk>=0.3.44
 sounddevice>=0.4.6
 # PyAudio is optional - sounddevice is the primary audio library
 

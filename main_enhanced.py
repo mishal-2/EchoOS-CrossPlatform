@@ -184,14 +184,16 @@ def main():
         # Create and show main window
         logger.info("Creating enhanced main window...")
         window = EchoMainWindowEnhanced(
-            auth=auth,
-            stt_manager=stt_manager,
-            app_discovery=app_discovery,
-            parser=parser,
-            executor=executor,
-            tts=tts,
-            accessibility=accessibility
-        )
+    auth,
+    stt_manager,
+    tts,
+    accessibility,
+    parser,    # positional for command_parser
+    executor   # positional for executor
+)
+
+            
+        
         
         window.show()
         logger.info("✓ Enhanced UI displayed")
